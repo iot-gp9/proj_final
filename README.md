@@ -34,5 +34,6 @@ monitoramento e visualização completa dos dados:
 
 *   **Simulação (WokWi):** <https://wokwi.com/projects/455672056860199937>
 *   **Dashboard Ubidots:** <https://industrial.ubidots.com/app/dashboards/public/dashboard/ZgCbYRmr8VX2Gt4HXlN8uxJxdCj0OZsA>
-*   **Canal ThingSpeak** (requer login): <https://thingspeak.mathworks.com/channels/3258510/shared_view>
+*   **Canal ThingSpeak:** <https://thingspeak.mathworks.com/channels/3273274>
+*   **Repositório no GitHub:** <https://github.com/iot-gp9/proj_final>
 
