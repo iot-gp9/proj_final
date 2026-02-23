@@ -85,7 +85,7 @@ const char* THINGSPEAK_CH_API_KEY = "4A8IK8FMD2CSEKAJ";
  */
 
 // Variáveis de controle de estado
-bool bomba_ligada = true;
+bool bomba_ligada = false;
 bool parar = false;
 unsigned long ultimo_tempo_principal = 0; // Usada para controlar tempo de repeticao do laco principal
 unsigned long ultimo_tempo_thingspeak = 0; // Usada para controlar tempo de envio ao ThingSpeak
