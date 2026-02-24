@@ -308,17 +308,32 @@ void loop() {
     ultimo_tempo_principal = tempo_atual;
 
     if (MODO_EMULACAO) {
-      // --- 1. Simula dinâmica do nível da água ---
-      if (emulNivel > 99 && modeEsv) {
-        tx_esv = -0.5; // Começa a esvaziar
-        modeEsv = false;
-      } else if (emulNivel < 2 && !modeEsv && bomba_ligada) {
-        tx_esv = 1.2; // Começa a encher
-        modeEsv = true;
-      } else if (!modeEsv && !bomba_ligada) {
-        tx_esv = -0.1; // Queda lenta por evaporação
+      if (emulNivel > 99) {
+          // Reservatório cheio: Força o estado de esvaziamento padrão
+          tx_esv = -0.25; 
+          modeEsv = true; 
+      } 
+      else if (emulNivel < 50 && bomba_ligada) {
+          // Reservatório vazio: Força o estado de enchimento
+          tx_esv = 0.25; 
+          modeEsv = false; 
+      } 
+      else {
+          // --- LÓGICA DE TRANSIÇÃO DE TAXAS ---
+          
+          // 1. Verifica se deve entrar em queda lenta (Evaporação)
+          // Condição: Está esvaziando E o nível está nas faixas específicas
+          if (modeEsv && ((emulNivel >= 90 && emulNivel <= 91) || (emulNivel >= 70 && emulNivel <= 71))) {
+              tx_esv = -0.01; 
+          } 
+          // 2. Verifica se deve voltar para a queda padrão (-0.5)
+          // Condição: Se já passou das faixas (nível < 45 ou entre 46 e 90) e ainda está esvaziando
+          else if (modeEsv) {
+              tx_esv = -0.25; 
+          }
       }
       emulNivel += tx_esv;
+      Serial.println("Taxa de esvaziamento: " + String(tx_esv) + " | Nível: " + String(emulNivel));
 
       // --- 2. Temperatura Realista (Ciclo Assimétrico) ---
       // Usamos um ajuste na senóide para achatar a "noite" e alongar o "dia"
@@ -339,7 +354,7 @@ void loop() {
 
       // Atribuição para as variáveis do sistema
       nivel_agua = emulNivel;
-      umidade = 50.0 + random(-5, 5); // Umidade com ruído
+      umidade = emulUmid; // Umidade com ruído
       temperatura = emulTemp;
     } else {
       nivel_agua = readWaterLevel();
